@@ -1,44 +1,64 @@
-﻿using Backend.Core.Application.DTOs.Ingredient;
+﻿using AutoMapper;
+using Backend.Core.Application.DTOs.Ingredient;
 using Backend.Core.Application.Interfaces.Repositories;
 using Backend.Core.Application.Interfaces.Services;
+using Backend.Core.Domain.Entities;
 
 namespace Backend.Core.Application.Services
 {
     public class IngredientService : IIngredientService
     {
         private readonly IIngredientRepository _ingredientRepository;
-        public IngredientService(IIngredientRepository ingredientRepository)
+        private readonly IMapper _mapper;
+        public IngredientService(IIngredientRepository ingredientRepository, IMapper mapper)
         {
             _ingredientRepository = ingredientRepository;
+            _mapper = mapper;
         }
-        public Task<CreateIngredientDTO> AddIngredient(CreateIngredientDTO ingredientDTO)
+        public async Task<CreateIngredientDTO> AddIngredient(CreateIngredientDTO ingredientDTO)
         {
-            throw new NotImplementedException();
+            var ingredientModel = _mapper.Map<Ingredient>(ingredientDTO);
+            ingredientModel = await _ingredientRepository.AddIngredientAsync(ingredientModel);
+
+            var createdIngredientDTO = _mapper.Map<CreateIngredientDTO>(ingredientModel);
+
+            return createdIngredientDTO;
         }
 
-        public Task DeleteIngredient(int ingredientId)
+        public async Task DeleteIngredient(int ingredientId)
         {
-            throw new NotImplementedException();
+            var ingredientModel = await _ingredientRepository.GetIngredientByIdAsync(ingredientId);
+            await _ingredientRepository.DeleteIngredientAsync(ingredientModel);
         }
 
-        public Task<List<IngredientDTO>> GetAllIngredients()
+        public async Task<List<IngredientDTO>> GetAllIngredients()
         {
-            throw new NotImplementedException();
+            var ingredientModels = await _ingredientRepository.GetAllIngredientsAsync();
+            var ingredientsDTOs = _mapper.Map<List<IngredientDTO>>(ingredientModels);
+
+            return ingredientsDTOs;
         }
 
-        public Task<IngredientDTO> GetIngredientById(int ingredientId)
+        public async Task<IngredientDTO> GetIngredientById(int ingredientId)
         {
-            throw new NotImplementedException();
+            var ingredientModel = await _ingredientRepository.GetIngredientByIdAsync(ingredientId);
+            var ingredientDTO = _mapper.Map<IngredientDTO>(ingredientModel);
+
+            return ingredientDTO;
         }
 
-        public Task<IngredientDTO> GetIngredientByName(string ingredientName)
+        public async Task<IngredientDTO> GetIngredientByName(string ingredientName)
         {
-            throw new NotImplementedException();
+            var ingredientModel = await _ingredientRepository.GetIngredientByNameAsync(ingredientName);
+            var ingredientDTO = _mapper.Map<IngredientDTO>(ingredientModel);
+
+            return ingredientDTO;
         }
 
-        public Task<UpdateIngredientDTO?> UpdateIngredientById(int ingredientId, UpdateIngredientDTO ingredient)
+        public async Task UpdateIngredientById(int ingredientId, UpdateIngredientDTO ingredientDTO)
         {
-            throw new NotImplementedException();
+            var ingredientModel = _mapper.Map<Ingredient>(ingredientDTO);
+            await _ingredientRepository.UpdateIngredientAsync(ingredientId, ingredientModel);
         }
     }
 }

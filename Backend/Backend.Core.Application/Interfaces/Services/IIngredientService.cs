@@ -9,6 +9,6 @@ namespace Backend.Core.Application.Interfaces.Services
         Task<List<IngredientDTO>> GetAllIngredients();
         Task<IngredientDTO> GetIngredientById(int ingredientId);
         Task<IngredientDTO> GetIngredientByName(string ingredientName);
-        Task<UpdateIngredientDTO?> UpdateIngredientById(int ingredientId, UpdateIngredientDTO ingredient);
+        Task UpdateIngredientById(int ingredientId, UpdateIngredientDTO ingredientDTO);
     }
 }

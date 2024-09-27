@@ -32,7 +32,7 @@ namespace Backend.Infrastructure.Persistence.Repositories
             return await _context.Set<Ingredient>().ToListAsync();
         }
 
-        public async Task<Ingredient?> GetIngredientById(int ingredientId)
+        public async Task<Ingredient?> GetIngredientByIdAsync(int ingredientId)
         {
             var ingredient = await _context.Set<Ingredient>().FindAsync(ingredientId);
 
@@ -44,7 +44,7 @@ namespace Backend.Infrastructure.Persistence.Repositories
             return ingredient;
         }
 
-        public async Task<Ingredient?> GetIngredientByName(string ingredientName)
+        public async Task<Ingredient?> GetIngredientByNameAsync(string ingredientName)
         {
             var ingredient = await _context.Set<Ingredient>()
                                            .FirstOrDefaultAsync(i =>  i.Name == ingredientName);
@@ -52,7 +52,7 @@ namespace Backend.Infrastructure.Persistence.Repositories
             return ingredient;
         }
 
-        public async Task<Ingredient?> UpdateIngredient(int ingredientId, Ingredient ingredient)
+        public async Task<Ingredient?> UpdateIngredientAsync(int ingredientId, Ingredient ingredient)
         {
             var entry = await _context.Set<Ingredient>().FindAsync(ingredientId);
 
