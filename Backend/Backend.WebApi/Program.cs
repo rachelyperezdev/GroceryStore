@@ -1,4 +1,6 @@
 using Backend.Infrastructure.Persistence.IoC;
+using Backend.Core.Application.IoC;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -9,6 +11,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddPersistenceInfrastructureLayer(builder.Configuration);
+builder.Services.AddApplicationLayer();
 
 var app = builder.Build();
 
