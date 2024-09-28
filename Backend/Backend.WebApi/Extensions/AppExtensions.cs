@@ -7,7 +7,7 @@
             app.UseSwagger();
             app.UseSwaggerUI(options =>
             {
-                options.SwaggerEndpoint("swagger/v1/swagger.json", "Grocery Store App API");
+                options.SwaggerEndpoint("swagger/v1/swagger.json", "Grocery Store API");
             });
         }
     }
