@@ -1,7 +1,9 @@
-﻿using Backend.Core.Application.Interfaces.Repositories;
+﻿using Backend.Core.Application.Helpers;
+using Backend.Core.Application.Interfaces.Repositories;
 using Backend.Core.Domain.Entities;
 using Backend.Infrastructure.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Backend.Infrastructure.Persistence.Repositories
 {
@@ -27,9 +29,34 @@ namespace Backend.Infrastructure.Persistence.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<Ingredient>?> GetAllIngredientsAsync()
+        public async Task<List<Ingredient>?> GetAllIngredientsAsync(IngredientQueryObject query)
         {
-            return await _context.Set<Ingredient>().ToListAsync();
+            var ingredients = _context.Set<Ingredient>()
+                                      .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(query.Name))
+            {
+                ingredients = ingredients.Where(i => i.Name.Contains(query.Name));
+            }
+
+            if(!string.IsNullOrWhiteSpace(query.SortBy))
+            {
+                if(query.IsDescendant)
+                {
+                    ingredients = ingredients.OrderByDescending(GetSortProperty(query));
+                }
+                else
+                {
+                    ingredients = ingredients.OrderBy(GetSortProperty(query));
+                }
+            }
+
+            var skipNumber = (query.PageNumber - 1) * query.PageSize;
+
+            return await ingredients
+                            .Skip(skipNumber)  
+                            .Take(query.PageSize)
+                           .ToListAsync();
         }
 
         public async Task<Ingredient?> GetIngredientByIdAsync(int ingredientId)
@@ -66,5 +93,19 @@ namespace Backend.Infrastructure.Persistence.Repositories
 
             return ingredient;
         }
+
+        #region Private Methods
+        private Expression<Func<Ingredient, object>> GetSortProperty(IngredientQueryObject query)
+        {
+            Expression<Func<Ingredient, object>> keySelector = query.SortBy?.ToLower() switch
+            {
+                "name" => ingredient => ingredient.Name,
+                "price" => ingredient => ingredient.Price,
+                _ => ingredient => ingredient.Name
+            };
+
+            return keySelector;
+        }
+        #endregion
     }
 }

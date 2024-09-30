@@ -1,4 +1,5 @@
 ﻿using Backend.Core.Application.DTOs.Ingredient;
+using Backend.Core.Application.Helpers;
 
 namespace Backend.Core.Application.Interfaces.Services
 {
@@ -6,7 +7,7 @@ namespace Backend.Core.Application.Interfaces.Services
     {
         Task<CreateIngredientDTO> AddIngredient(CreateIngredientDTO ingredientDTO);
         Task DeleteIngredient(int ingredientId);    
-        Task<List<IngredientDTO>> GetAllIngredients();
+        Task<List<IngredientDTO>> GetAllIngredients(IngredientQueryObject query);
         Task<IngredientDTO> GetIngredientById(int ingredientId);
         Task<IngredientDTO> GetIngredientByName(string ingredientName);
         Task UpdateIngredientById(int ingredientId, UpdateIngredientDTO ingredientDTO);

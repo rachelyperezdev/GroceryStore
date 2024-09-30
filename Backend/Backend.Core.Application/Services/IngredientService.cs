@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Backend.Core.Application.DTOs.Ingredient;
+using Backend.Core.Application.Helpers;
 using Backend.Core.Application.Interfaces.Repositories;
 using Backend.Core.Application.Interfaces.Services;
 using Backend.Core.Domain.Entities;
@@ -31,9 +32,9 @@ namespace Backend.Core.Application.Services
             await _ingredientRepository.DeleteIngredientAsync(ingredientModel);
         }
 
-        public async Task<List<IngredientDTO>> GetAllIngredients()
+        public async Task<List<IngredientDTO>> GetAllIngredients(IngredientQueryObject query)
         {
-            var ingredientModels = await _ingredientRepository.GetAllIngredientsAsync();
+            var ingredientModels = await _ingredientRepository.GetAllIngredientsAsync(query);
             var ingredientsDTOs = _mapper.Map<List<IngredientDTO>>(ingredientModels);
 
             return ingredientsDTOs;
