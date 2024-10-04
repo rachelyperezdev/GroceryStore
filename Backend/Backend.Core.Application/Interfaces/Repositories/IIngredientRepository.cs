@@ -8,7 +8,7 @@ namespace Backend.Core.Application.Interfaces.Repositories
        Task<Ingredient?> AddIngredientAsync(Ingredient ingredient);
         Task<List<Ingredient>?> GetAllIngredientsAsync(IngredientQueryObject query);
         Task<Ingredient?> GetIngredientByIdAsync(int ingredientId);
-        Task<Ingredient?> GetIngredientByNameAsync(string ingredientName);
+        Task<List<Ingredient>?> GetIngredientsByNameAsync(string ingredientName);
         Task<Ingredient?> UpdateIngredientAsync(int ingredientId, Ingredient ingredient);
         Task DeleteIngredientAsync(Ingredient ingredient);
     }

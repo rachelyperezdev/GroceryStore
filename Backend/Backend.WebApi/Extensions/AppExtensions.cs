@@ -1,4 +1,6 @@
-﻿namespace Backend.WebApi.Extensions
+﻿using Swashbuckle.AspNetCore.SwaggerUI;
+
+namespace Backend.WebApi.Extensions
 {
     public static class AppExtensions
     {
@@ -7,7 +9,7 @@
             app.UseSwagger();
             app.UseSwaggerUI(options =>
             {
-                options.SwaggerEndpoint("swagger/v1/swagger.json", "Grocery Store API");
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "Grocery Store API");
             });
         }
     }

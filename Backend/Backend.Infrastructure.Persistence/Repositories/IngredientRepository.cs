@@ -56,7 +56,7 @@ namespace Backend.Infrastructure.Persistence.Repositories
             return await ingredients
                             .Skip(skipNumber)  
                             .Take(query.PageSize)
-                           .ToListAsync();
+                            .ToListAsync();
         }
 
         public async Task<Ingredient?> GetIngredientByIdAsync(int ingredientId)
@@ -71,10 +71,12 @@ namespace Backend.Infrastructure.Persistence.Repositories
             return ingredient;
         }
 
-        public async Task<Ingredient?> GetIngredientByNameAsync(string ingredientName)
+        public async Task<List<Ingredient?>> GetIngredientsByNameAsync(string ingredientName)
         {
             var ingredient = await _context.Set<Ingredient>()
-                                           .FirstOrDefaultAsync(i =>  i.Name == ingredientName);
+                                      .Where(ingredient => 
+                                             ingredient.Name.Contains(ingredientName))
+                                      .ToListAsync ();
 
             return ingredient;
         }
@@ -87,6 +89,10 @@ namespace Backend.Infrastructure.Persistence.Repositories
             {
                 return null;
             }
+
+            ingredient.Id = ingredientId;
+            ingredient.CreatedBy = entry.CreatedBy;
+            ingredient.CreatedAt = entry.CreatedAt;
 
             _context.Entry(entry).CurrentValues.SetValues(ingredient);
             await _context.SaveChangesAsync();

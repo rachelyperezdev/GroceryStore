@@ -15,7 +15,7 @@ namespace Backend.Core.Application.Mappers
             CreateMap<CreateIngredientDTO, Ingredient>()
                 .ReverseMap();
 
-            CreateMap<UpdateIngredientDTO, Ingredient>()
+            CreateMap<Ingredient, UpdateIngredientDTO>()
                 .ReverseMap();
             #endregion
         }

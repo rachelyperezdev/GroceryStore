@@ -16,7 +16,7 @@ builder.Services.AddApplicationLayer();
 
 builder.Services.AddHealthChecks();
 builder.Services.AddSwaggerExtensions();
-builder.Services.AddApiVersioning();
+builder.Services.AddApiVersioningExtensions();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
 
@@ -34,6 +34,7 @@ else
 }
 
 app.UseHttpsRedirection();
+app.UseRouting();
 
 app.UseAuthentication();    
 app.UseAuthorization();

@@ -16,12 +16,12 @@ namespace Backend.Core.Application.Services
             _ingredientRepository = ingredientRepository;
             _mapper = mapper;
         }
-        public async Task<CreateIngredientDTO> AddIngredient(CreateIngredientDTO ingredientDTO)
+        public async Task<IngredientDTO> AddIngredient(CreateIngredientDTO ingredientDTO)
         {
             var ingredientModel = _mapper.Map<Ingredient>(ingredientDTO);
             ingredientModel = await _ingredientRepository.AddIngredientAsync(ingredientModel);
 
-            var createdIngredientDTO = _mapper.Map<CreateIngredientDTO>(ingredientModel);
+            var createdIngredientDTO = _mapper.Map<IngredientDTO>(ingredientModel);
 
             return createdIngredientDTO;
         }
@@ -48,15 +48,15 @@ namespace Backend.Core.Application.Services
             return ingredientDTO;
         }
 
-        public async Task<IngredientDTO> GetIngredientByName(string ingredientName)
+        public async Task<List<IngredientDTO>> GetIngredientsByName(string ingredientName)
         {
-            var ingredientModel = await _ingredientRepository.GetIngredientByNameAsync(ingredientName);
-            var ingredientDTO = _mapper.Map<IngredientDTO>(ingredientModel);
+            var ingredientsModel = await _ingredientRepository.GetIngredientsByNameAsync(ingredientName);
+            var ingredientDTO = _mapper.Map<List<IngredientDTO>>(ingredientsModel);
 
             return ingredientDTO;
         }
 
-        public async Task UpdateIngredientById(int ingredientId, UpdateIngredientDTO ingredientDTO)
+        public async Task UpdateIngredient(int ingredientId, UpdateIngredientDTO ingredientDTO)
         {
             var ingredientModel = _mapper.Map<Ingredient>(ingredientDTO);
             await _ingredientRepository.UpdateIngredientAsync(ingredientId, ingredientModel);

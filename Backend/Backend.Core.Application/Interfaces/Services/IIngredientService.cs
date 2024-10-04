@@ -5,11 +5,11 @@ namespace Backend.Core.Application.Interfaces.Services
 {
     public interface IIngredientService
     {
-        Task<CreateIngredientDTO> AddIngredient(CreateIngredientDTO ingredientDTO);
+        Task<IngredientDTO> AddIngredient(CreateIngredientDTO ingredientDTO);
         Task DeleteIngredient(int ingredientId);    
         Task<List<IngredientDTO>> GetAllIngredients(IngredientQueryObject query);
         Task<IngredientDTO> GetIngredientById(int ingredientId);
-        Task<IngredientDTO> GetIngredientByName(string ingredientName);
-        Task UpdateIngredientById(int ingredientId, UpdateIngredientDTO ingredientDTO);
+        Task<List<IngredientDTO>> GetIngredientsByName(string ingredientName);
+        Task UpdateIngredient(int ingredientId, UpdateIngredientDTO ingredientDTO);
     }
 }

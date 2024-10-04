@@ -2,7 +2,7 @@
 {
     public class IngredientQueryObject
     {
-        public string Name { get; set; }
+        public string? Name { get; set; }
         public int PageNumber { get; set; } = 1;
         public int PageSize { get; set; } = 12;
         public bool IsDescendant { get; set; } = false;
