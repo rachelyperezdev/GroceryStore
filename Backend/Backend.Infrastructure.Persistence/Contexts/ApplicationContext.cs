@@ -10,26 +10,6 @@ namespace Backend.Infrastructure.Persistence.Contexts
         
         public DbSet<Ingredient> Ingredients { get; set;}
 
-        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
-        {
-            foreach(var entry in ChangeTracker.Entries<AuditableBaseEntity>())
-            {
-                switch(entry.State)
-                {
-                    case EntityState.Added:
-                        entry.Entity.CreatedAt = DateTime.Now;
-                        entry.Entity.CreatedBy = "DefaultUser";
-                        break;
-                    case EntityState.Modified:
-                        entry.Entity.UpdatedAt = DateTime.Now;
-                        entry.Entity.UpdatedBy = "DefaultUser";
-                        break;
-                }
-            }
-
-            return base.SaveChangesAsync(cancellationToken);
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

@@ -1,5 +1,6 @@
 ﻿using Backend.Core.Application.Interfaces.Repositories;
 using Backend.Infrastructure.Persistence.Contexts;
+using Backend.Infrastructure.Persistence.Interceptor;
 using Backend.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -21,16 +22,18 @@ namespace Backend.Infrastructure.Persistence.IoC
             }
             else
             {
-                services.AddDbContext<ApplicationContext>(options =>
+                services.AddDbContext<ApplicationContext>((sp, options) =>
                 {
                     options.UseSqlServer(configuration.GetConnectionString("Default"),
-                        m => m.MigrationsAssembly(typeof(ApplicationContext).Assembly.FullName));
+                                         m => m.MigrationsAssembly(typeof(ApplicationContext).Assembly.FullName))
+                           .AddInterceptors(sp.GetService<AuditableInterceptor>());
                 });
             }
             #endregion
 
             #region Repositories
             services.AddScoped<IIngredientRepository, IngredientRepository>();
+            services.AddSingleton<AuditableInterceptor>();
             #endregion
         }
     }

@@ -61,7 +61,8 @@ namespace Backend.Infrastructure.Persistence.Repositories
 
         public async Task<Ingredient?> GetIngredientByIdAsync(int ingredientId)
         {
-            var ingredient = await _context.Set<Ingredient>().FindAsync(ingredientId);
+            var ingredient = await _context.Set<Ingredient>()
+                                           .FindAsync(ingredientId);
 
             if(ingredient is null)
             {
