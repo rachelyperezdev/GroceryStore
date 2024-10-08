@@ -50,6 +50,11 @@ namespace Backend.Infrastructure.Persistence.Contexts
                 .IsRequired();
             #endregion
 
+            #region Filters
+            modelBuilder.Entity<Ingredient>()
+                        .HasQueryFilter(a => !a.IsDeleted);
+            #endregion
+
             #region Indexes
             modelBuilder.Entity<Ingredient>()
                 .HasIndex(i => i.Id)
@@ -59,6 +64,11 @@ namespace Backend.Infrastructure.Persistence.Contexts
             modelBuilder.Entity<Ingredient>()
                 .HasIndex(i => i.Name)
                 .HasDatabaseName("IX_Ingredient_Name");
+
+            modelBuilder.Entity<Ingredient>()
+                .HasIndex(a => a.IsDeleted)
+                .HasFilter("IsDeleted = 0")
+                .HasDatabaseName("IX_Auditable_IsDeleted");
             #endregion
         }
     }
