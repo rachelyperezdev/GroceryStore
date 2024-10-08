@@ -5,17 +5,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Infrastructure.Persistence.Interceptor
 {
-    public class AuditableInterceptor : SaveChangesInterceptor
+    public sealed class AuditableInterceptor : SaveChangesInterceptor
     {
-        public override ValueTask<int> SavedChangesAsync(
-            SaveChangesCompletedEventData eventData, 
-            int result, 
+        public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
+            DbContextEventData eventData,
+            InterceptionResult<int> result,
             CancellationToken cancellationToken = default)
         {
 
             if(eventData is null)
             {
-                return base.SavedChangesAsync(eventData, result, cancellationToken);
+                return base.SavingChangesAsync(eventData, result, cancellationToken);
             }
 
             IEnumerable<EntityEntry<AuditableBaseEntity>> entityEntries =
@@ -38,13 +38,14 @@ namespace Backend.Infrastructure.Persistence.Interceptor
                         break;
                     case EntityState.Deleted:
                         entry.State = EntityState.Modified;
+                        entry.Entity.IsDeleted = true;
                         entry.Entity.DeletedBy = "DefaultUser";
                         entry.Entity.DeletedAt = DateTime.UtcNow;
                         break;
                 }
             }
 
-            return base.SavedChangesAsync(eventData, result, cancellationToken);
+            return base.SavingChangesAsync(eventData, result, cancellationToken);
         }
     }
 }

@@ -31,7 +31,7 @@ namespace Backend.WebApi.Controllers.v1
                 return BadRequest();
             }
 
-            return CreatedAtAction(nameof(GetByName), new { Name = ingredientDTO.Name }, ingredient);
+            return CreatedAtAction(nameof(GetById), new { Id = ingredient.Id }, ingredient);
         }
 
         [HttpGet]

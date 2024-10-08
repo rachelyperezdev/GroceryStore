@@ -12,6 +12,8 @@ namespace Backend.Infrastructure.Persistence.IoC
     {
         public static void AddPersistenceInfrastructureLayer(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddSingleton<AuditableInterceptor>();
+
             #region Contexts
             if (configuration.GetValue<bool>("UseInMemoryDatabase"))
             {
@@ -26,14 +28,13 @@ namespace Backend.Infrastructure.Persistence.IoC
                 {
                     options.UseSqlServer(configuration.GetConnectionString("Default"),
                                          m => m.MigrationsAssembly(typeof(ApplicationContext).Assembly.FullName))
-                           .AddInterceptors(sp.GetService<AuditableInterceptor>());
+                           .AddInterceptors(sp.GetService<AuditableInterceptor>()!);
                 });
             }
             #endregion
 
             #region Repositories
             services.AddScoped<IIngredientRepository, IngredientRepository>();
-            services.AddSingleton<AuditableInterceptor>();
             #endregion
         }
     }
