@@ -23,19 +23,26 @@ namespace Backend.WebApi.Controllers.v1
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Post([FromBody] CreateIngredientDTO ingredientDTO)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest();
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest();
+                }
+
+                var ingredient = await _ingredientService.AddIngredient(ingredientDTO);
+
+                if (ingredient is null)
+                {
+                    return BadRequest();
+                }
+
+                return CreatedAtAction(nameof(GetById), new { Id = ingredient.Id }, ingredient);
             }
-
-            var ingredient = await _ingredientService.AddIngredient(ingredientDTO);
-
-            if (ingredient is null)
+            catch (Exception ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
-
-            return CreatedAtAction(nameof(GetById), new { Id = ingredient.Id }, ingredient);
         }
 
         [HttpGet]
@@ -44,14 +51,21 @@ namespace Backend.WebApi.Controllers.v1
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Get([FromQuery] IngredientQueryObject query)
         {
-            var ingredients = await _ingredientService.GetAllIngredients(query);
-
-            if (ingredients.Any())
+            try
             {
-                return Ok(ingredients);
-            }
+                var ingredients = await _ingredientService.GetAllIngredients(query);
 
-            return NoContent();
+                if (ingredients.Any())
+                {
+                    return Ok(ingredients);
+                }
+
+                return NoContent();
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet("{id:int}")]
@@ -60,14 +74,21 @@ namespace Backend.WebApi.Controllers.v1
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var ingredient = await _ingredientService.GetIngredientById(id);
-
-            if (ingredient is null)
+            try
             {
-                return NoContent();
-            }
+                var ingredient = await _ingredientService.GetIngredientById(id);
 
-            return Ok(ingredient);
+                if (ingredient is null)
+                {
+                    return NoContent();
+                }
+
+                return Ok(ingredient);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet("{name:alpha}")]
@@ -76,14 +97,21 @@ namespace Backend.WebApi.Controllers.v1
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetByName([FromRoute] string name)
         {
-            var ingredient = await _ingredientService.GetIngredientsByName(name);
-
-            if(ingredient is null)
+            try
             {
-                return NoContent();
-            }
+                var ingredient = await _ingredientService.GetIngredientsByName(name);
 
-            return Ok(ingredient);
+                if (ingredient is null)
+                {
+                    return NoContent();
+                }
+
+                return Ok(ingredient);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("{id:int}")]
@@ -92,21 +120,28 @@ namespace Backend.WebApi.Controllers.v1
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Put([FromRoute] int id, [FromBody] UpdateIngredientDTO ingredientDTO)
         {
-            if(!ModelState.IsValid)
+            try
             {
-                return BadRequest("Internal error while updating the ingredient.");
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest("Internal error while updating the ingredient.");
+                }
+
+                var ingredientToUpdate = await _ingredientService.GetIngredientById(id);
+
+                if (ingredientToUpdate is null)
+                {
+                    return NotFound("Ingredient not found.");
+                }
+
+                await _ingredientService.UpdateIngredient(id, ingredientDTO);
+
+                return Ok(ingredientDTO);
             }
-
-            var ingredientToUpdate = await _ingredientService.GetIngredientById(id);
-
-            if(ingredientToUpdate is null)
+            catch(Exception ex)
             {
-                return NotFound("Ingredient not found.");
+                return BadRequest(ex.Message);
             }
-
-            await _ingredientService.UpdateIngredient(id, ingredientDTO);
-
-            return Ok(ingredientDTO);
         }
 
         [HttpDelete("{id:int}")]
@@ -115,16 +150,24 @@ namespace Backend.WebApi.Controllers.v1
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var ingredientToDelete = await _ingredientService.GetIngredientById(id);
-
-            if(ingredientToDelete is null)
+            try
             {
-                return NotFound();
+                var ingredientToDelete = await _ingredientService.GetIngredientById(id);
+
+                if (ingredientToDelete is null)
+                {
+                    return NotFound();
+                }
+
+                await _ingredientService.DeleteIngredient(id);
+
+                return NoContent();
+            }
+            catch(Exception ex) 
+            {
+                return BadRequest(ex.Message);
             }
 
-            await _ingredientService.DeleteIngredient(id);
-
-            return NoContent();
         }
     }
 }
