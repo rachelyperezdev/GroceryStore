@@ -4,6 +4,7 @@ using Backend.Core.Application.Helpers;
 using Backend.Core.Application.Interfaces.Services;
 using Backend.WebApi.Controllers.Base;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Backend.WebApi.Controllers.v1
 {
@@ -17,6 +18,9 @@ namespace Backend.WebApi.Controllers.v1
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(IngredientDTO))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Post([FromBody] CreateIngredientDTO ingredientDTO)
         {
             if (!ModelState.IsValid)
@@ -35,6 +39,9 @@ namespace Backend.WebApi.Controllers.v1
         }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IngredientDTO))]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Get([FromQuery] IngredientQueryObject query)
         {
             var ingredients = await _ingredientService.GetAllIngredients(query);
@@ -48,6 +55,9 @@ namespace Backend.WebApi.Controllers.v1
         }
 
         [HttpGet("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IngredientDTO))]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
             var ingredient = await _ingredientService.GetIngredientById(id);
@@ -61,6 +71,9 @@ namespace Backend.WebApi.Controllers.v1
         }
 
         [HttpGet("{name:alpha}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IngredientDTO))]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetByName([FromRoute] string name)
         {
             var ingredient = await _ingredientService.GetIngredientsByName(name);
@@ -74,6 +87,9 @@ namespace Backend.WebApi.Controllers.v1
         }
 
         [HttpPut("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof (IngredientDTO))]
+        [ProducesResponseType (StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Put([FromRoute] int id, [FromBody] UpdateIngredientDTO ingredientDTO)
         {
             if(!ModelState.IsValid)
@@ -94,6 +110,9 @@ namespace Backend.WebApi.Controllers.v1
         }
 
         [HttpDelete("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             var ingredientToDelete = await _ingredientService.GetIngredientById(id);

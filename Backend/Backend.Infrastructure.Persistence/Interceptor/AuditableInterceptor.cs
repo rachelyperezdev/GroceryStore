@@ -30,17 +30,17 @@ namespace Backend.Infrastructure.Persistence.Interceptor
                 {
                     case EntityState.Added:
                         entry.Entity.CreatedBy = "DefaultUser";
-                        entry.Entity.CreatedAt = DateTime.UtcNow;
+                        entry.Entity.CreatedAt = DateTime.Now;
                         break;
                     case EntityState.Modified:
                         entry.Entity.UpdatedBy = "DefaultUser";
-                        entry.Entity.UpdatedAt = DateTime.UtcNow;
+                        entry.Entity.UpdatedAt = DateTime.Now;
                         break;
                     case EntityState.Deleted:
                         entry.State = EntityState.Modified;
                         entry.Entity.IsDeleted = true;
                         entry.Entity.DeletedBy = "DefaultUser";
-                        entry.Entity.DeletedAt = DateTime.UtcNow;
+                        entry.Entity.DeletedAt = DateTime.Now;
                         break;
                 }
             }
